@@ -1,0 +1,15 @@
+# Ignorar arquivos compilados do Maven
+target/
+*.class
+
+# Ignorar configurações da IDE (IntelliJ, Eclipse, VSCode)
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+
+# Ignorar arquivos de log e dados reais (Segurança/LGPD)
+*.log
+pedidos_reais.txt

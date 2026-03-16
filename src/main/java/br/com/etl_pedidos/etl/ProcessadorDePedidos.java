@@ -164,7 +164,7 @@ public class ProcessadorDePedidos {
     private static void processarRegrasDeNegocio(Connection conn) throws Exception {
         try (Statement stmt = conn.createStatement()) {
 
-            // 1. Salva Clientes Novos
+            //Salvando os dados
             stmt.execute("""
                 INSERT INTO clientes (codigoComprador, nome, email, endereco, CEP, UF, pais)
                 SELECT DISTINCT codigoComprador, nomeComprador, email, endereco, CEP, UF, pais
@@ -172,7 +172,6 @@ public class ProcessadorDePedidos {
                 ON CONFLICT (codigoComprador) DO NOTHING;
             """);
 
-            // 2. Salva Produtos Novos
             stmt.execute("""
                 INSERT INTO produtos (SKU, UPC, nome)
                 SELECT DISTINCT SKU, UPC, nomeProduto
@@ -180,7 +179,6 @@ public class ProcessadorDePedidos {
                 ON CONFLICT (SKU) DO NOTHING;
             """);
 
-            // 3. Calcula e Salva Pedidos (Soma produtos + frete único)
             stmt.execute("""
                 INSERT INTO pedidos (codigoPedido, codigoComprador, dataPedido, frete, valor_total)
                 SELECT
@@ -194,14 +192,12 @@ public class ProcessadorDePedidos {
                 ON CONFLICT (codigoPedido) DO NOTHING;
             """);
 
-            // 4. Salva os Itens na tabela Compra
             stmt.execute("""
                 INSERT INTO compra (codigoPedido, SKU, quantidade, valor_unitario)
                 SELECT codigoPedido, SKU, qtd, valor
                 FROM temp_pedidos_dia;
             """);
 
-            // 5. Atualiza Expedição
             stmt.execute("""
                 INSERT INTO expedicao (codigoPedido, status)
                 SELECT DISTINCT codigoPedido, 'Aguardando Separação'

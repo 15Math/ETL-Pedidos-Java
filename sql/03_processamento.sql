@@ -1,6 +1,6 @@
 BEGIN;
 
--- 1. Clientes (Moda antiga: WHERE NOT EXISTS)
+-- 1. Clientes
 INSERT INTO clientes (codigoComprador, nome, email, endereco, CEP, UF, pais)
 SELECT DISTINCT
     t.codigoComprador, t.nomeComprador, t.email, t.endereco, t.CEP, t.UF, t.pais
